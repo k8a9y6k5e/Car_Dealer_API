@@ -1,6 +1,7 @@
 # Car_Dealer_API
 
 To Do list of project:
+- [ ] add information/details
 - [ ] add the car
 - [ ] update the car
 - [ ] to evaluate the car
