@@ -12,3 +12,20 @@ generator client {
 datasource db {
   provider = "mysql"
 }
+
+model Car{
+  id Int @id @default(autoincrement())
+  statusId Int
+  brandId Int
+  modelId Int
+  categoryId Int
+  fuelTypeId Int
+  transmissionId Int
+  price Decimal @db.Decimal(10,2)
+  year Int
+  mileage Decimal? @db.Decimal(7,2)
+  color String?
+  visits Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
