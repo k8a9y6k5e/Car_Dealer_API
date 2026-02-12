@@ -23,3 +23,5 @@ async function _insertBrand(informations: BrandBody){
 
     return{id : id, name :informations.name, nacionality :informations.nacionality};
 }
+
+export {brandAddController};

@@ -36,3 +36,5 @@ function _addValidator(body:object){
 
     return result.data;
 }
+
+export {brandAddValidator};
