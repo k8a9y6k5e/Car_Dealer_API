@@ -1,5 +1,6 @@
 import {z} from 'zod';
 import type {Request, Response, NextFunction} from 'express';
+import {BrandError} from '../error-handler/brand-error-handler.js';
 
 declare global{
     namespace Express{
@@ -30,8 +31,8 @@ function _addValidator(body:object){
     const result = _addSchema.safeParse(body);
 
     if(!result.success) {
-        const field = result.error.issues[0]?.path.join(', ');
-        throw new Error(`Invalid value format enter in : ${field}`);
+        const fields = result.error.issues.map(issue => issue.message);
+        throw new BrandError('Invalid value format enter', 400, fields);
     }
 
     return result.data;
