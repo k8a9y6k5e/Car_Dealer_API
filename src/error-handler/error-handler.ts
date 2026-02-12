@@ -24,9 +24,9 @@ export default function (err:BaseError, req:Request, res:Response){
 
 export class BaseError extends Error{
     statusCode : number;
-    data : Array<string>;
+    data : Array<string> | object;
 
-    constructor(message:string, statusCode:number, data:Array<string>){
+    constructor(message:string, statusCode:number, data:Array<string>|object){
         super(message);
         this.statusCode  = statusCode;
         this.data = data;

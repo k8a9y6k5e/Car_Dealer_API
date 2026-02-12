@@ -8,7 +8,7 @@ interface BrandBody{
 
 async function brandAddController(req:Request,res:Response,next:NextFunction){
     try{
-        const result =await _insertBrand(req.body as BrandBody);
+        const result =await _insertBrand(req.validatedBody as BrandBody);
 
         res.status(201).json({work:true,data:result});
     }

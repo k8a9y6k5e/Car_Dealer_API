@@ -1,6 +1,7 @@
 import {z} from 'zod';
 import type {Request, Response, NextFunction} from 'express';
 import {BrandError} from '../error-handler/brand-error-handler.js';
+import {knex as db} from '../../database/knex-connection.js';
 
 declare global{
     namespace Express{
@@ -13,9 +14,18 @@ declare global{
     }
 }
 
-function brandAddValidator(req:Request, res:Response, next:NextFunction){
+interface brandBody{
+    name : string;
+    nacionality : string;
+}
+
+async function brandAddValidator(req:Request, res:Response, next:NextFunction){
     try{
-        req.validatedBody = _addValidator(req.body);
+        const result = _addValidator(req.body);
+
+        _alreadyExistValidator(result);
+
+        req.validatedBody = result;
 
         next();
     }
@@ -36,6 +46,14 @@ function _addValidator(body:object){
     }
 
     return result.data;
+}
+
+async function _alreadyExistValidator(body:brandBody){
+    const existVerification = await db('brand')
+        .where({brand_name : body.name})
+        .select('id');
+
+    if(existVerification) throw new BrandError('brand already added', 400, body);
 }
 
 export {brandAddValidator};
