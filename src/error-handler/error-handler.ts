@@ -7,7 +7,7 @@ import fs from 'fs';
 
 if(!fs.existsSync('logs/error')) fs.mkdirSync('logs/error', {recursive:true});
 
-const errorTransport = new DailyRotateFile({
+const _errorTransport = new DailyRotateFile({
     level : 'error',
     dirname : 'logs/error',
     filename: 'error-%DATE%.log',
@@ -15,10 +15,10 @@ const errorTransport = new DailyRotateFile({
     maxFiles : '15d'
 });
 
-const errorLogger = winston.createLogger({
+const _errorLogger = winston.createLogger({
     level : 'error',
     format : winston.format.json(),
-    transports : [errorTransport]
+    transports : [_errorTransport]
 });
 
 export default function (err:BaseError, req:Request, res:Response, next:NextFunction){
@@ -28,7 +28,7 @@ export default function (err:BaseError, req:Request, res:Response, next:NextFunc
         data:err.data
     };
 
-    errorLogger.error(data);
+    _errorLogger.error(data);
 
     res.status(err.statusCode ?? 500).json(data);
 }
