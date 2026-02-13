@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
 
 import DailyRotateFile from 'winston-daily-rotate-file';
 
@@ -12,7 +12,7 @@ const errorLogger = new DailyRotateFile({
     maxFiles : '15d'
 });
 
-export default function (err:BaseError, req:Request, res:Response){
+export default function (err:BaseError, req:Request, res:Response, next:NextFunction){
     if(!fs.existsSync('logs/error')) fs.mkdirSync('logs/error', {recursive:true});
 
     res.status(err.statusCode | 500).json({

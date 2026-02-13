@@ -41,7 +41,7 @@ function _addValidator(body:object){
     const result = _addSchema.safeParse(body);
 
     if(!result.success) {
-        const fields = result.error.issues.map(issue => issue.message);
+        const fields = result.error.issues.map(issue => issue.path.join(', '));
         throw new BrandError('Invalid value format enter', 400, fields);
     }
 
@@ -53,7 +53,7 @@ async function _alreadyExistValidator(body:brandBody){
         .where({brand_name : body.name})
         .select('id');
 
-    if(existVerification) throw new BrandError('brand already added', 400, body);
+    if(existVerification) throw new BrandError('brand alreadey addd', 400, body);
 }
 
 export {brandAddValidator};
