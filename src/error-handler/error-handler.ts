@@ -1,10 +1,13 @@
 import type { Request, Response, NextFunction } from "express";
 
+import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 
 import fs from 'fs';
 
-const errorLogger = new DailyRotateFile({
+if(!fs.existsSync('logs/error')) fs.mkdirSync('logs/error', {recursive:true});
+
+const errorTransport = new DailyRotateFile({
     level : 'error',
     dirname : 'logs/error',
     filename: 'error-%DATE%.log',
@@ -12,14 +15,22 @@ const errorLogger = new DailyRotateFile({
     maxFiles : '15d'
 });
 
-export default function (err:BaseError, req:Request, res:Response, next:NextFunction){
-    if(!fs.existsSync('logs/error')) fs.mkdirSync('logs/error', {recursive:true});
+const errorLogger = winston.createLogger({
+    level : 'error',
+    format : winston.format.json(),
+    transports : [errorTransport]
+});
 
-    res.status(err.statusCode | 500).json({
+export default function (err:BaseError, req:Request, res:Response, next:NextFunction){
+    const data = {
         work:false, 
         error:err.message,
         data:err.data
-    });
+    };
+
+    errorLogger.error(data);
+
+    res.status(err.statusCode ?? 500).json(data);
 }
 
 export class BaseError extends Error{

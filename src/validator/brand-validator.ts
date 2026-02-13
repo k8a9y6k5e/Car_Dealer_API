@@ -23,7 +23,7 @@ async function brandAddValidator(req:Request, res:Response, next:NextFunction){
     try{
         const result = _addValidator(req.body);
 
-        _alreadyExistValidator(result);
+        await _alreadyExistValidator(result);
 
         req.validatedBody = result;
 
@@ -53,7 +53,7 @@ async function _alreadyExistValidator(body:brandBody){
         .where({brand_name : body.name})
         .select('id');
 
-    if(existVerification) throw new BrandError('brand alreadey addd', 400, body);
+    if(existVerification) throw new BrandError('brand alreadey added', 400, body);
 }
 
 export {brandAddValidator};
